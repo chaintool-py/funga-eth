@@ -13,7 +13,7 @@ from hexathon import (
 
 # local imports
 from funga.eth.encoding import chain_id_to_v
-#from crypto_dev_signer.eth.rlp import rlp_encode
+#from funga.eth.rlp import rlp_encode
 import rlp
 
 logg = logging.getLogger(__name__)

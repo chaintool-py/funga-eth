@@ -53,7 +53,7 @@ setup(
         long_description_content_type='text/markdown',
         entry_points = {
             'console_scripts': [
-                'funga-eth=funga.eth.runnable.signer:main',
+                'funga-ethd=funga.eth.runnable.signer:main',
                 'eth-keyfile=funga.eth.runnable.keyfile:main',
                 ],
             },

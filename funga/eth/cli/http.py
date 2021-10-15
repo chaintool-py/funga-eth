@@ -9,7 +9,7 @@ from http.server import (
 
 # local imports
 from .handle import SignRequestHandler
-from crypto_dev_signer.error import SignerError
+from funga.error import SignerError
 
 logg = logging.getLogger(__name__)
 
