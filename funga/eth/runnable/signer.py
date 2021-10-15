@@ -12,20 +12,23 @@ import confini
 from jsonrpc.exceptions import *
 
 # local imports
-from crypto_dev_signer.eth.signer import ReferenceSigner
-from crypto_dev_signer.keystore.reference import ReferenceKeystore
-from crypto_dev_signer.cli.handle import SignRequestHandler
+from funga.eth.signer import EIP155Signer
+from funga.eth.keystore.sql import SQLKeystore
+from funga.eth.cli.handle import SignRequestHandler
 
 logging.basicConfig(level=logging.WARNING)
 logg = logging.getLogger()
 
-config_dir = '.'
+script_dir = os.path.dirname(os.path.realpath(__file__))
+data_dir = os.path.join(script_dir, '..', 'data')
+config_dir = os.path.join(data_dir, 'config')
 
 db = None
 signer = None
 session = None
 chainId = 8995
 socket_path = '/run/crypto-dev-signer/jsonrpc.ipc'
+
 
 argparser = argparse.ArgumentParser()
 argparser.add_argument('-c', type=str, default=config_dir, help='config file')
@@ -85,8 +88,8 @@ def main():
     kw = {
             'symmetric_key': secret,
             }
-    SignRequestHandler.keystore = ReferenceKeystore(dsn, **kw)
-    SignRequestHandler.signer = ReferenceSigner(SignRequestHandler.keystore)
+    SignRequestHandler.keystore = SQLKeystore(dsn, **kw)
+    SignRequestHandler.signer = EIP155Signer(SignRequestHandler.keystore)
 
     arg = None
     try:
@@ -97,19 +100,19 @@ def main():
         if socket_url.scheme != '':
             scheme = socket_url.scheme
         if re.match(re_tcp, socket_url.scheme):
-            from crypto_dev_signer.cli.socket import start_server_tcp
+            from funga.eth.cli.socket import start_server_tcp
             socket_spec = socket_url.netloc.split(':')
             host = socket_spec[0]
             port = int(socket_spec[1])
             start_server_tcp((host, port))
         elif re.match(re_http, socket_url.scheme):
-            from crypto_dev_signer.cli.http import start_server_http
+            from funga.eth.cli.http import start_server_http
             socket_spec = socket_url.netloc.split(':')
             host = socket_spec[0]
             port = int(socket_spec[1])
             start_server_http((host, port))
         else:
-            from crypto_dev_signer.cli.socket import start_server_unix
+            from funga.eth.cli.socket import start_server_unix
             start_server_unix(socket_url.path)
         sys.exit(0)
    

@@ -1,6 +1,6 @@
 from setuptools import setup
 
-f = open('README.md', 'r')
+f = open('README', 'r')
 long_description = f.read()
 f.close()
 
@@ -33,7 +33,7 @@ f.close()
 
 setup(
         name="funga-eth",
-        version="0.5.1a1",
+        version="0.5.1a2",
         description="Ethereum implementation of the funga keystore and signer",
         author="Louis Holbrook",
         author_email="dev@holbrook.no",
@@ -58,4 +58,5 @@ setup(
                 ],
             },
         url='https://gitlab.com/chaintool/funga-eth',
+        include_package_data=True,
         )

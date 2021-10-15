@@ -140,7 +140,6 @@ def from_dict(o, passphrase=''):
         pk = m(ciphertext_bytes, decryption_key[:16], iv)
     except AssertionError as e:
         raise DecryptError('could not decrypt keyfile: {}'.format(e))
-    logg.debug('bar')
 
     return pk
 

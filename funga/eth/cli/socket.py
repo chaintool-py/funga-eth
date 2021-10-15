@@ -5,7 +5,7 @@ import socket
 import stat
 
 # local imports
-from crypto_dev_signer.error import SignerError
+from funga.error import SignerError
 from .handle import SignRequestHandler
 
 logg = logging.getLogger(__name__)
