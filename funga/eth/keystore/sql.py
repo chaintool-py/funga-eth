@@ -48,6 +48,8 @@ class SQLKeystore(EthKeystore):
                 self.db_session.execute(s)
                 self.db_session.commit()
             self.symmetric_key = kwargs.get('symmetric_key')
+            self.__rs = None
+            self.__rs_crsr = 0
 
 
         def __del__(self):
@@ -70,6 +72,15 @@ class SQLKeystore(EthKeystore):
             self.db_session.commit()
             a = self._decrypt(k, password)
             return a
+
+
+        def list(self):
+            s = text('SELECT wallet_address_hex FROM ethereum')
+            self.__rs = self.db_session.execute(s)
+            addresses = []
+            for r in self.__rs:
+                addresses.append(r)
+            return addresses
 
 
         def import_key(self, pk, password=None):
