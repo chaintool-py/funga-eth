@@ -52,7 +52,7 @@ if args.k != None:
 def main():
     global pk_hex
 
-    passphrase = os.environ.get('PASSPHRASE')
+    passphrase = os.environ.get('WALLET_PASSPHRASE', os.environ.get('PASSPHRASE'))
     if args.z:
         passphrase = ''
     r = None
