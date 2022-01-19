@@ -13,19 +13,20 @@ import sha3
 
 # local imports
 from funga.error import (
-        DecryptError,
-        KeyfileError,
-        )
+    DecryptError,
+    KeyfileError,
+)
 from funga.eth.encoding import private_key_to_address
 
 logg = logging.getLogger(__name__)
 
 algo_keywords = [
     'aes-128-ctr',
-        ]
+]
 hash_keywords = [
-    'scrypt'
-        ]
+    'scrypt',
+    'pbkdf2'
+]
 
 default_kdfparams = {
     'dklen': 32,
@@ -33,8 +34,14 @@ default_kdfparams = {
     'p': 1,
     'r': 8,
     'salt': os.urandom(32).hex(),
-        }
+}
 
+pbkdf2_kdfparams = {
+    'c': 100000,
+    'dklen': 32,
+    'prf': 'sha256',
+    'salt': os.urandom(32).hex(),
+}
 
 def to_mac(mac_key, ciphertext_bytes):
     h = sha3.keccak_256()
@@ -47,17 +54,35 @@ class Hashes:
 
     @staticmethod
     def from_scrypt(kdfparams=default_kdfparams, passphrase=''):
-        dklen = int(kdfparams['dklen']) 
-        n = int(kdfparams['n']) 
-        p = int(kdfparams['p']) 
-        r = int(kdfparams['r']) 
+        dklen = int(kdfparams['dklen'])
+        n = int(kdfparams['n'])
+        p = int(kdfparams['p'])
+        r = int(kdfparams['r'])
         salt = bytes.fromhex(kdfparams['salt'])
 
-        return hashlib.scrypt(passphrase.encode('utf-8'), salt=salt,n=n, p=p, r=r, maxmem=1024*1024*1024, dklen=dklen)
+        return hashlib.scrypt(passphrase.encode('utf-8'), salt=salt, n=n, p=p, r=r, maxmem=1024 * 1024 * 1024,
+                              dklen=dklen)
 
-    
+    @staticmethod
+    def from_pbkdf2(kdfparams=pbkdf2_kdfparams, passphrase=''):
+        hashname = kdfparams['prf']
+        pwd = passphrase.encode('utf-8')
+        salt = bytes.fromhex(kdfparams['salt'])
+        itr = int(kdfparams['c'])
+        dklen = int(kdfparams['dklen'])
+
+        derived_key = hashlib.pbkdf2_hmac(
+            hash_name=hashname,
+            password=pwd,
+            salt=salt,
+            iterations=itr,
+            dklen=dklen
+        )
+
+        return derived_key
+
+
 class Ciphers:
-
     aes_128_block_size = 1 << 7
     aes_iv_len = 16
 
@@ -68,7 +93,6 @@ class Ciphers:
         plaintext = cipher.decrypt(ciphertext)
         return plaintext
 
-
     @staticmethod
     def encrypt_aes_128_ctr(plaintext, encryption_key, iv):
         ctr = Counter.new(Ciphers.aes_128_block_size, initial_value=iv)
@@ -77,11 +101,19 @@ class Ciphers:
         return ciphertext
 
 
-def to_dict(private_key_bytes, passphrase=''):
-   
+def to_dict(private_key_bytes, kdf :str, passphrase=''):
     private_key = coincurve.PrivateKey(secret=private_key_bytes)
 
-    encryption_key = Hashes.from_scrypt(passphrase=passphrase)
+    if kdf == 'scrypt':
+        encryption_key = Hashes.from_scrypt(passphrase=passphrase)
+        kdfparams = default_kdfparams
+
+    elif kdf == 'pbkdf2':
+        encryption_key = Hashes.from_pbkdf2(passphrase=passphrase)
+        kdfparams = pbkdf2_kdfparams
+
+    else:
+        raise NotImplementedError("KDF not implemented: {0}".format(kdf))
 
     address_hex = private_key_to_address(private_key)
     iv_bytes = os.urandom(Ciphers.aes_iv_len)
@@ -95,11 +127,11 @@ def to_dict(private_key_bytes, passphrase=''):
         'ciphertext': ciphertext_bytes.hex(),
         'cipherparams': {
             'iv': iv_bytes.hex(),
-            },
-        'kdf': 'scrypt',
-        'kdfparams': default_kdfparams,
+        },
+        'kdf': kdf,
+        'kdfparams': kdfparams,
         'mac': mac.hex(),
-        }
+    }
 
     uu = uuid.uuid1()
     o = {
@@ -107,12 +139,11 @@ def to_dict(private_key_bytes, passphrase=''):
         'version': 3,
         'crypto': crypto_dict,
         'id': str(uu),
-        }
+    }
     return o
 
 
 def from_dict(o, passphrase=''):
-
     cipher = o['crypto']['cipher']
     if cipher not in algo_keywords:
         raise NotImplementedError('cipher "{}" not implemented'.format(cipher))
@@ -121,19 +152,19 @@ def from_dict(o, passphrase=''):
     if kdf not in hash_keywords:
         raise NotImplementedError('kdf "{}" not implemented'.format(kdf))
 
-    m = getattr(Hashes, 'from_{}'.format(kdf.replace('-', '_'))) 
+    m = getattr(Hashes, 'from_{}'.format(kdf.replace('-', '_')))
     decryption_key = m(o['crypto']['kdfparams'], passphrase)
 
     control_mac = bytes.fromhex(o['crypto']['mac'])
     iv_bytes = bytes.fromhex(o['crypto']['cipherparams']['iv'])
     iv = int.from_bytes(iv_bytes, "big")
     ciphertext_bytes = bytes.fromhex(o['crypto']['ciphertext'])
-    
+
     # check mac
     calculated_mac = to_mac(decryption_key[16:], ciphertext_bytes)
     if control_mac != calculated_mac:
         raise DecryptError('mac mismatch when decrypting passphrase')
-    
+
     m = getattr(Ciphers, 'decrypt_{}'.format(cipher.replace('-', '_')))
 
     try:
@@ -145,7 +176,6 @@ def from_dict(o, passphrase=''):
 
 
 def from_file(filepath, passphrase=''):
-
     f = open(filepath, 'r')
     try:
         o = json.load(f)

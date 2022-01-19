@@ -16,6 +16,10 @@ from funga.eth.keystore.keyfile import (
         from_file,
         to_dict,
         )
+# from testkeyfile import (
+#     from_file,
+#     to_dict
+# )
 from funga.eth.encoding import (
         private_key_to_address,
         private_key_from_bytes,
@@ -77,7 +81,7 @@ def main():
         else:
             pk_bytes = os.urandom(32)
         pk = coincurve.PrivateKey(secret=pk_bytes)
-        o = to_dict(pk_bytes, passphrase)
+        o = to_dict(pk_bytes, 'pbkdf2', passphrase)
         r = json.dumps(o)
 
     print(r) 
