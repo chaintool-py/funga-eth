@@ -33,7 +33,7 @@ f.close()
 
 setup(
         name="funga-eth",
-        version="0.5.3",
+        version="0.5.4b1",
         description="Ethereum implementation of the funga keystore and signer",
         author="Louis Holbrook",
         author_email="dev@holbrook.no",
@@ -55,6 +55,7 @@ setup(
             'console_scripts': [
                 'funga-ethd=funga.eth.runnable.signer:main',
                 'eth-keyfile=funga.eth.runnable.keyfile:main',
+                'eth-sign-msg=funga.eth.runnable.msg:main',
                 ],
             },
         url='https://gitlab.com/chaintool/funga-eth',
