@@ -28,7 +28,7 @@ hash_keywords = [
     'pbkdf2'
 ]
 
-default_kdfparams = {
+default_scrypt_kdfparams = {
     'dklen': 32,
     'n': 1 << 18,
     'p': 1,
@@ -53,7 +53,7 @@ def to_mac(mac_key, ciphertext_bytes):
 class Hashes:
 
     @staticmethod
-    def from_scrypt(kdfparams=default_kdfparams, passphrase=''):
+    def from_scrypt(kdfparams=default_scrypt_kdfparams, passphrase=''):
         dklen = int(kdfparams['dklen'])
         n = int(kdfparams['n'])
         p = int(kdfparams['p'])
@@ -65,20 +65,16 @@ class Hashes:
 
     @staticmethod
     def from_pbkdf2(kdfparams=pbkdf2_kdfparams, passphrase=''):
-        hashname = kdfparams['prf']
-        pwd = passphrase.encode('utf-8')
-        salt = bytes.fromhex(kdfparams['salt'])
-        itr = int(kdfparams['c'])
-        dklen = int(kdfparams['dklen'])
+        if kdfparams['prf'] == 'hmac-sha256':
+            kdfparams['prf'].replace('sha256')
 
         derived_key = hashlib.pbkdf2_hmac(
-            hash_name=hashname,
-            password=pwd,
-            salt=salt,
-            iterations=itr,
-            dklen=dklen
+            hash_name=kdfparams['prf'],
+            password=passphrase.encode('utf-8'),
+            salt=bytes.fromhex(kdfparams['salt']),
+            iterations=int(kdfparams['c']),
+            dklen=int(kdfparams['dklen'])
         )
-
         return derived_key
 
 
@@ -106,7 +102,7 @@ def to_dict(private_key_bytes, kdf :str, passphrase=''):
 
     if kdf == 'scrypt':
         encryption_key = Hashes.from_scrypt(passphrase=passphrase)
-        kdfparams = default_kdfparams
+        kdfparams = default_scrypt_kdfparams
 
     elif kdf == 'pbkdf2':
         encryption_key = Hashes.from_pbkdf2(passphrase=passphrase)
