@@ -16,6 +16,8 @@ from funga.eth.keystore.keyfile import (
         from_file,
         to_dict,
         )
+
+
 from funga.eth.encoding import (
         private_key_to_address,
         private_key_from_bytes,
