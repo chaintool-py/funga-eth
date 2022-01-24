@@ -36,7 +36,7 @@ default_scrypt_kdfparams = {
     'salt': os.urandom(32).hex(),
 }
 
-pbkdf2_kdfparams = {
+default_pbkdf2_kdfparams = {
     'c': 100000,
     'dklen': 32,
     'prf': 'sha256',
@@ -64,7 +64,7 @@ class Hashes:
                               dklen=dklen)
 
     @staticmethod
-    def from_pbkdf2(kdfparams=pbkdf2_kdfparams, passphrase=''):
+    def from_pbkdf2(kdfparams=default_pbkdf2_kdfparams, passphrase=''):
         if kdfparams['prf'] == 'hmac-sha256':
             kdfparams['prf'].replace('hmac-sha256','sha256')
 

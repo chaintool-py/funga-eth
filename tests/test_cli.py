@@ -4,7 +4,7 @@ import logging
 import os
 
 # external imports
-from hexathon import strip_0x, add_0x
+from hexathon import strip_0x
 from pathlib import Path
 
 import sys
@@ -16,7 +16,7 @@ print(sys.path)
 from funga.eth.signer import EIP155Signer
 from funga.eth.keystore.dict import DictKeystore
 
-# import dicttest as d
+
 from funga.eth.cli.handle import SignRequestHandler
 from funga.eth.transaction import EIP155Transaction
 
