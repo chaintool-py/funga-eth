@@ -97,7 +97,7 @@ class Ciphers:
         return ciphertext
 
 
-def to_dict(private_key_bytes, kdf :str, passphrase=''):
+def to_dict(private_key_bytes, kdf='scrypt', passphrase=''):
     private_key = coincurve.PrivateKey(secret=private_key_bytes)
 
     if kdf == 'scrypt':

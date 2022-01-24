@@ -79,7 +79,7 @@ def main():
         else:
             pk_bytes = os.urandom(32)
         pk = coincurve.PrivateKey(secret=pk_bytes)
-        o = to_dict(pk_bytes, 'scrypt', passphrase)
+        o = to_dict(pk_bytes, passphrase)
         r = json.dumps(o)
 
     print(r) 
