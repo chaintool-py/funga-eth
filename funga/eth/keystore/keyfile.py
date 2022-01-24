@@ -66,10 +66,10 @@ class Hashes:
     @staticmethod
     def from_pbkdf2(kdfparams=pbkdf2_kdfparams, passphrase=''):
         if kdfparams['prf'] == 'hmac-sha256':
-            kdfparams['prf'].replace('sha256')
+            kdfparams['prf'].replace('hmac-sha256','sha256')
 
         derived_key = hashlib.pbkdf2_hmac(
-            hash_name=kdfparams['prf'],
+            hash_name='sha256',
             password=passphrase.encode('utf-8'),
             salt=bytes.fromhex(kdfparams['salt']),
             iterations=int(kdfparams['c']),

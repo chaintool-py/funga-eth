@@ -81,12 +81,6 @@ class TestCli(unittest.TestCase):
                          'f86c2a8504a817c8008252089435353535353535353535353535353535353535358203e884deadbeef82466aa0b7c1bbf52f736ada30fe253c7484176f44d6fd097a9720dc85ae5bbc7f060e54a07afee2563b0cf6d00333df51cc62b0d13c63108b2bce54ce2ad24e26ce7b4f25')
 
 
-    def test_pbkdf2(self):
-        keystore_filepath = os.path.join(data_dir, 'foo2.json')
-        address_hex = self.keystore.import_keystore_file(keystore_filepath)
-        logg.debug('getting {}'.format(address_hex))
-        pk = self.keystore.get(strip_0x(address_hex), '')
-        self.assertEqual(pk.lower(), 'a1De08A738F0bD3B261dC41d7E2102599bf648CA')
 
     def test_sign_msg(self):
         keystore_file = os.path.join(data_dir,

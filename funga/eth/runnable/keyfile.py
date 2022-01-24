@@ -16,14 +16,7 @@ from funga.eth.keystore.keyfile import (
         from_file,
         to_dict,
         )
-# from pathlib import Path
-# import sys
-# path_root = Path(__file__).parents[1]
-# sys.path.append(str(path_root))
-# from keystore.testkeyfile import (
-#     from_file,
-#     to_dict
-# )
+
 
 from funga.eth.encoding import (
         private_key_to_address,
