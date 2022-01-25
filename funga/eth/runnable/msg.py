@@ -23,6 +23,7 @@ argparser = argparse.ArgumentParser()
 argparser.add_argument('-f', type=str, help='Keyfile to use for signing')
 argparser.add_argument('-z', action='store_true', help='zero-length password')
 argparser.add_argument('-v', action='store_true', help='be verbose')
+argparser.add_argument('-0', dest='nonl', action='store_true', help='no newline at end of output')
 argparser.add_argument('msg', type=str, help='Message to sign')
 args = argparser.parse_args()
 
@@ -42,7 +43,11 @@ def main():
 
     signer = EIP155Signer(keystore)
     sig = signer.sign_ethereum_message(address, args.msg.encode('utf-8').hex(), password=passphrase)
-    sys.stdout.write(sig.hex())
+
+    r = sig.hex()
+    if not args.nonl:
+        r += "\n"
+    sys.stdout.write(r)
 
 
 if __name__ == '__main__':

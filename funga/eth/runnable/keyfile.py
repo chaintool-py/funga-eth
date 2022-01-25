@@ -30,6 +30,7 @@ logg = logging.getLogger()
 argparser = argparse.ArgumentParser()
 argparser.add_argument('-d', '--decrypt', dest='d', type=str, help='decrypt file')
 argparser.add_argument('--private-key', dest='private_key', action='store_true', help='output private key instead of address')
+argparser.add_argument('-0', dest='nonl', action='store_true', help='no newline at end of output')
 argparser.add_argument('-z', action='store_true', help='zero-length password')
 argparser.add_argument('-k', type=str, help='load key from file')
 argparser.add_argument('-v', action='store_true', help='be verbose')
@@ -79,10 +80,12 @@ def main():
         else:
             pk_bytes = os.urandom(32)
         pk = coincurve.PrivateKey(secret=pk_bytes)
-        o = to_dict(pk_bytes, passphrase)
+        o = to_dict(pk_bytes, passphrase=passphrase)
         r = json.dumps(o)
 
-    print(r) 
+    if not args.nonl:
+        r += "\n"
+    sys.stdout.write(r) 
 
 
 if __name__ == '__main__':

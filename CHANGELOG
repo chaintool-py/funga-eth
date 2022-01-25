@@ -1,5 +1,7 @@
 * 0.5.4
 	- Add message signer cli
+	- Add pbkdf2 support
+	- Add -0 flag for omitting newline on output
 * 0.5.3
 	- Upgrade RLP to 3.0.0 (eliminates really annoying cytoolz warning on stdout)
 ---
