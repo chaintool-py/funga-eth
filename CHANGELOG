@@ -2,6 +2,7 @@
 	- Add message signer cli
 	- Add pbkdf2 support
 	- Add -0 flag for omitting newline on output
+	- Revert RLP to 2.0.1, to not break eth-tester in dependents
 * 0.5.3
 	- Upgrade RLP to 3.0.0 (eliminates really annoying cytoolz warning on stdout)
 ---

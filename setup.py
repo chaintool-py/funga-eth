@@ -33,7 +33,7 @@ f.close()
 
 setup(
         name="funga-eth",
-        version="0.5.4b2",
+        version="0.5.6",
         description="Ethereum implementation of the funga keystore and signer",
         author="Louis Holbrook",
         author_email="dev@holbrook.no",
@@ -58,6 +58,6 @@ setup(
                 'eth-sign-msg=funga.eth.runnable.msg:main',
                 ],
             },
-        url='https://gitlab.com/chaintool/funga-eth',
+        url='https://git.grassecon.net/chaintool/funga-eth',
         include_package_data=True,
         )
