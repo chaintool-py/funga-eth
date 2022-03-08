@@ -1,0 +1,34 @@
+.TH eth-keyfile 1 
+.SH NAME
+eth-keyfile /- Generate and parse Ethereum keyfiles
+.SH SYNOPSIS
+\fBeth-keyfile\fP [ -z ] [ -v ] [ -k \fIprivatekeyfile\fP ]
+.P
+\fBeth-keyfile\fP [ --private-key ] [ -z ] [ -v ] -d \fIkeyfile\fP
+.SH DESCRIPTION
+\fBeth-keyfile\fP lets you create and parse Ethereum keyfiles. 
+.SS OPTIONS
+.TP
+\fB-d \fIkeyfile\fP
+Parse the given keyfile, outputting the Ethereum address.
+.TP
+\fB--private-key\fP
+When parsing a keyfile, output the private key instead of the Ethereum address.
+.TP
+\fB-k \fIprivatekeyfile\fP\fP
+When creating a keyfile, load private key from the filename given as argument.
+.TP
+\fB-v\fP
+Turn on verbose logging.
+.TP
+\fB-z\fP
+Do not use a passphrase.
+.SS ENVIRONMENT VARIABLES
+.TP
+\fBPRIVATE_KEY\fP
+Create a keyfile for the given private key.
+.TP
+\fBPASSPHRASE\fP
+Create or parse a keyfile using the given passphrase.
+.SS NOTES
+The current implementation will only create and parse keyfiles encrypted with aes-128-ctr, and with the scrypt KDF.

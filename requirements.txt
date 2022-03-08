@@ -1,4 +1,4 @@
-cryptography==3.2.1
+cryptography==3.3
 pysha3==1.0.2
 rlp==2.0.1
 #rlp==3.0.0
