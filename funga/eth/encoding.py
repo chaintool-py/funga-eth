@@ -41,7 +41,7 @@ def private_key_to_address(pk, result_format='hex'):
 
 def is_address(address_hex):
     try:
-        address_hex = strip_0x(address_hex)    
+        address_hex = strip_0x(address_hex, pad=False)
     except ValueError:
         return False
     return len(address_hex) == 40
@@ -57,10 +57,10 @@ def is_checksum_address(address_hex):
 
 
 def to_checksum_address(address_hex):
-        address_hex = strip_0x(address_hex)
-        address_hex = uniform(address_hex)
+        address_hex = strip_0x(address_hex, pad=False)
         if len(address_hex) != 40:
             raise ValueError('Invalid address length')
+        address_hex = uniform(address_hex)
         h = sha3.keccak_256()
         h.update(address_hex.encode('utf-8'))
         z = h.digest()

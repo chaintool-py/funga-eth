@@ -1,3 +1,9 @@
+* 0.6.2
+	- Enable signing of binary message
+* 0.6.1
+	- Avoid padding of addresses missing one nibble
+* 0.6.0
+	- Upgrade confini
 * 0.5.4
 	- Add message signer cli
 	- Add pbkdf2 support
