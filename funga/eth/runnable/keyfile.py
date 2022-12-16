@@ -5,6 +5,7 @@ import sys
 import json
 import argparse
 import getpass
+import stat
 
 # external impors
 import coincurve
@@ -30,6 +31,7 @@ logg = logging.getLogger()
 argparser = argparse.ArgumentParser()
 argparser.add_argument('-d', '--decrypt', dest='d', type=str, help='decrypt file')
 argparser.add_argument('--private-key', dest='private_key', action='store_true', help='output private key instead of address')
+argparser.add_argument('--passphrase-file', dest='passphrase_file', type=str, help='Keystore file to use for signing or address')
 argparser.add_argument('-0', dest='nonl', action='store_true', help='no newline at end of output')
 argparser.add_argument('-z', action='store_true', help='zero-length password')
 argparser.add_argument('-k', type=str, help='load key from file')
@@ -56,8 +58,19 @@ def main():
     global pk_hex
 
     passphrase = os.environ.get('WALLET_PASSPHRASE', os.environ.get('PASSPHRASE'))
+
     if args.z:
         passphrase = ''
+    else:
+        fp = getattr(args, 'passphrase_file')
+        if fp != None:
+            st = os.stat(fp)
+            if stat.S_IMODE(st.st_mode) & (stat.S_IRWXO | stat.S_IRWXG) > 0:
+                logg.warning('others than owner have access on password file')
+            f = open(fp, 'r')
+            passphrase = f.read()
+            f.close()
+
     r = None
     if mode == 'decrypt':
         if passphrase == None:
