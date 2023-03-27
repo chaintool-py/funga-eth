@@ -1,3 +1,6 @@
+* 0.6.5
+	- Add signer for ERC191 validator message (version 00)
+	- Expose encoded messages for signing
 * 0.6.4
 	- Add passphrase file option to keyfile cli command
 * 0.6.3

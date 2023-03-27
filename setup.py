@@ -33,7 +33,7 @@ f.close()
 
 setup(
         name="funga-eth",
-        version="0.6.4",
+        version="0.6.5",
         description="Ethereum implementation of the funga keystore and signer",
         author="Louis Holbrook",
         author_email="dev@holbrook.no",
@@ -58,6 +58,6 @@ setup(
                 'eth-sign-msg=funga.eth.runnable.msg:main',
                 ],
             },
-        url='https://git.defalsify.org/funga-eth.git',
+        url='https://git.defalsify.org/funga-eth',
         include_package_data=True,
         )
