@@ -1,3 +1,5 @@
+* 0.6.6
+	- EIP712 Typed data signer support
 * 0.6.5
 	- Add signer for ERC191 validator message (version 00)
 	- Expose encoded messages for signing
