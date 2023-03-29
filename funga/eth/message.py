@@ -42,6 +42,3 @@ def to_personal_message(data, digest=False):
     if digest:
         r = to_digest(r)
     return r
-
-
-
