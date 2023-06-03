@@ -13,7 +13,6 @@ from jsonrpc.exceptions import *
 
 # local imports
 from funga.eth.signer import EIP155Signer
-from funga.eth.keystore.sql import SQLKeystore
 from funga.eth.cli.handle import SignRequestHandler
 
 logging.basicConfig(level=logging.WARNING)
@@ -34,6 +33,7 @@ argparser = argparse.ArgumentParser()
 argparser.add_argument('-c', type=str, default=config_dir, help='config file')
 argparser.add_argument('--env-prefix', default=os.environ.get('CONFINI_ENV_PREFIX'), dest='env_prefix', type=str, help='environment prefix for variables to overwrite configuration')
 argparser.add_argument('-i', type=int, help='default chain id for EIP155')
+argparser.add_argument('-k', '--keystore-type', dest='keystore_type', type=str, choices=['dict', 'sql'], default='dict', help='keystore backend type')
 argparser.add_argument('-s', type=str, help='socket path')
 argparser.add_argument('-v', action='store_true', help='be verbose')
 argparser.add_argument('-vv', action='store_true', help='be more verbose')
@@ -88,7 +88,14 @@ def main():
     kw = {
             'symmetric_key': secret,
             }
-    SignRequestHandler.keystore = SQLKeystore(dsn, **kw)
+    if args.keystore_type == 'sql':
+        logg.info('using sql keystore: ' + dsn)
+        from funga.eth.keystore.sql import SQLKeystore
+        SignRequestHandler.keystore = SQLKeystore(dsn, **kw)
+    else:
+        logg.warning('using volatile dict keystore - all keys will be lost when you quit')
+        from funga.eth.keystore.dict import DictKeystore
+        SignRequestHandler.keystore = DictKeystore()
     SignRequestHandler.signer = EIP155Signer(SignRequestHandler.keystore)
 
     arg = None

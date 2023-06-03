@@ -1,14 +1,31 @@
-# Funga - Ethereum implementation
+# funga-eth
+
+Ethereum implementation of the `funga` signer interface.
 
 See https://git.defalsify.org/funga for more details.
 
 ## Tools
 
-When installed with pip/setuptools, this package provides a Unix socket IPC server as `funga-ethd` implementing the following web3 json-rpc methods:
+When installed as a python package, three tools are installed in the python executable script path.
+
+* `funga-ethd` - Signer daemon (see below for details).
+* `eth-keyfile` - Ethereum keyfile en- and decoder, and en- and decrypter.
+* `eth-msg-sign` - Signer tool for arbitrary messages ([ERC-191](https://eips.ethereum.org/EIPS/eip-191)).
+
+
+### funga-ethd
+
+A Unix socket IPC server as `funga-ethd` implementing the following web3 json-rpc methods:
 
 * web3.eth.personal.newAccount
 * web3.eth.personal.signTransaction
 * web3.eth.signTransaction
+
+
+### CLI tools
+
+Please use `--help` as argument to the `eth-keyfile` and `eth-msg-sign` tools to learn the arguments the tools accept.
+
 
 ## Funga interface implementations
 

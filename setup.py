@@ -1,9 +1,5 @@
 from setuptools import setup
 
-f = open('README', 'r')
-long_description = f.read()
-f.close()
-
 requirements = []
 f = open('requirements.txt', 'r')
 while True:
@@ -31,9 +27,13 @@ while True:
     test_requirements.append(l.rstrip())
 f.close()
 
+f = open('README.md', 'r')
+description = f.read()
+f.close()
+
 setup(
         name="funga-eth",
-        version="0.6.6",
+        version="0.7.0",
         description="Ethereum implementation of the funga keystore and signer",
         author="Louis Holbrook",
         author_email="dev@holbrook.no",
@@ -49,8 +49,6 @@ setup(
             'sql': sql_requirements,
             },
         tests_require=test_requirements,
-        long_description=long_description,
-        long_description_content_type='text/markdown',
         entry_points = {
             'console_scripts': [
                 'funga-ethd=funga.eth.runnable.signer:main',
@@ -60,4 +58,6 @@ setup(
             },
         url='https://git.defalsify.org/funga-eth',
         include_package_data=True,
+        long_description=description,
+        long_description_content_type='text/markdown',
         )
