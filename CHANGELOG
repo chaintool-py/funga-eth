@@ -1,3 +1,5 @@
+* 0.7.1
+	- Upgrade to beta
 * 0.7.0
 	- Make dict keystore default for signer daemon
 * 0.6.7
