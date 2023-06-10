@@ -1,5 +1,5 @@
 cryptography==3.2.1
-pysha3==1.0.2
+safe-pysha3==1.0.4
 rlp==2.0.1
 #rlp==3.0.0
 json-rpc==1.13.0
