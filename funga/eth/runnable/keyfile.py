@@ -21,6 +21,7 @@ from funga.eth.keystore.keyfile import (
 
 from funga.eth.encoding import (
         private_key_to_address,
+        private_key_to_public_key,
         private_key_from_bytes,
         )
 
@@ -34,7 +35,8 @@ argparser.add_argument('--private-key', dest='private_key', action='store_true',
 argparser.add_argument('--passphrase-file', dest='passphrase_file', type=str, help='Keystore file to use for signing or address')
 argparser.add_argument('-0', dest='nonl', action='store_true', help='no newline at end of output')
 argparser.add_argument('-z', action='store_true', help='zero-length password')
-argparser.add_argument('-k', type=str, help='load key from file')
+argparser.add_argument('-k', type=str, help='load private key from file')
+argparser.add_argument('-p', '--public-key', dest='p', action='store_true', help='return public key instead of address')
 argparser.add_argument('-v', action='store_true', help='be verbose')
 args = argparser.parse_args()
 
@@ -82,7 +84,11 @@ def main():
             sys.exit(1)
         if not secret:
             pk = private_key_from_bytes(bytes.fromhex(r))
-            r = private_key_to_address(pk)
+            r = None
+            if args.p:
+                r = private_key_to_public_key(pk)
+            else:
+                r = private_key_to_address(pk)
     elif mode == 'create':
         if passphrase == None:
             passphrase = getpass.getpass('encryption phrase: ')

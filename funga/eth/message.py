@@ -10,7 +10,8 @@ logg = logging.getLogger(__name__)
 def to_digest(data):
     h = sha3.keccak_256()
     h.update(data)
-    return h.digest()
+    z = h.digest()
+    return z
 
 # ERC191 - version 0x00
 def to_validator_message(data, validator, digest=False):
@@ -20,6 +21,7 @@ def to_validator_message(data, validator, digest=False):
     logg.debug('raw message data: ' + r.hex())
     if digest:
         r = to_digest(r)
+    logg.debug('sign validator message digest: {}'.format(r.hex()))
     return r
 
 
@@ -31,6 +33,7 @@ def to_typed_message(data, domain, digest=False):
     logg.debug('raw message data: ' + r.hex())
     if digest:
         r = to_digest(r)
+    logg.debug('sign typed message digest: {}'.format(r.hex()))
     return r
 
 
@@ -41,7 +44,5 @@ def to_personal_message(data, digest=False):
     logg.debug('raw message data: ' + r.hex())
     if digest:
         r = to_digest(r)
+    logg.debug('sign personal message digest: {}'.format(r.hex()))
     return r
-
-
-

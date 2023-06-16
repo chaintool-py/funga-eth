@@ -39,6 +39,14 @@ def private_key_to_address(pk, result_format='hex'):
     return public_key_to_address(pubk, result_format)
 
 
+def private_key_to_public_key(pk, result_format='hex'):
+    pubk = coincurve.PublicKey.from_secret(pk.secret)
+    r = pubk.format(compressed=False)
+    if result_format=='hex':
+        r = r.hex()
+    return r
+
+
 def is_address(address_hex):
     try:
         address_hex = strip_0x(address_hex, pad=False)

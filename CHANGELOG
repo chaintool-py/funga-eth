@@ -1,3 +1,5 @@
+* 0.7.3
+	- Enable public key as output from keyfile decrypt
 * 0.7.2
 	- Replace pysha3 with safe-pysha3
 * 0.7.1
