@@ -1,3 +1,5 @@
+* 0.7.4
+	- Add pure (non ERC191) signing mode to signer cli tool
 * 0.7.3
 	- Enable public key as output from keyfile decrypt
 * 0.7.2

@@ -26,6 +26,7 @@ argparser.add_argument('-v', action='store_true', help='be verbose')
 argparser.add_argument('-0', dest='nonl', action='store_true', help='no newline at end of output')
 argparser.add_argument('-b', '--binary', dest='binary', action='store_true', help='parse input as binary hex')
 argparser.add_argument('--validator', type=str, help='if set, will sign an ERC191 version 0 message')
+argparser.add_argument('--pure', action='store_true', help='Omit EIP191 transformation')
 argparser.add_argument('msg', type=str, help='Message to sign')
 args = argparser.parse_args()
 
@@ -53,7 +54,10 @@ def main():
         msg = args.msg.encode('utf-8').hex()
 
     sig = None
-    if args.validator:
+    if args.pure:
+        logg.info('signing pure message (no ERC191)')
+        sig = signer.sign_pure(address, msg, password=passphrase)
+    elif args.validator:
         logg.info('signing validator message (ERC191 version 0)')
         sig = signer.sign_validator_message(address, args.validator, msg, password=passphrase)
     else:
