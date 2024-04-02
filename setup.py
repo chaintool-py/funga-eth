@@ -33,7 +33,7 @@ f.close()
 
 setup(
         name="funga-eth",
-        version="0.7.4",
+        version="0.7.5",
         description="Ethereum implementation of the funga keystore and signer",
         author="Louis Holbrook",
         author_email="dev@holbrook.no",
